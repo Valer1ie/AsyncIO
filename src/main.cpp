@@ -3,6 +3,7 @@
 int main(const int argc, const char **argv) {
   using namespace John;
   IOService::Init();
+  OnExitScope([]() { IOService::Dispose(); });
   IOCommandList cmd_list;
   std::filesystem::path src_path = argv[0];
   if (src_path.has_filename()) {
@@ -19,6 +20,5 @@ int main(const int argc, const char **argv) {
   cmd_list.CopyFrom(data_desc, FileDesc{dst, 10, 10});
   uint64_t ev = IOService::Execute(cmd_list);
   IOService::Sync(ev);
-  IOService::Dispose();
   return 0;
 }
